@@ -3,6 +3,7 @@ import expect from 'expect'
 import { createStore, combineReducers } from 'redux'
 import ReactDOM from 'react-dom'
 import React, { Component } from 'react'
+import { Provider, connect } from 'react-redux';
 
 const todo = (state, action) => {
 	switch (action.type) {
@@ -133,7 +134,6 @@ class FilterLink extends Component {
 					})
 				}
 			>
-
 				{ props.children }
 			</Link>
 		);
@@ -226,6 +226,32 @@ const getVisibleTodos = (todos, filter) => {
 	}
 };
 
+const mapStateToProps = (state) => {
+	return {
+		todos: getVisibleTodos(
+			state.todos,
+			state.visibilityFilter
+		)
+	};
+};
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		onTodoClick: (id) => {
+			dispatch({
+				type: 'TOGGLE_TODO',
+				id
+			})
+		}
+	};
+};
+
+const VisibleTodoList = connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(TodoList);
+
+/*
 class VisibleTodoList extends Component {
 	componentDidMount() {
 		const { store } = this.context;
@@ -263,7 +289,7 @@ class VisibleTodoList extends Component {
 
 VisibleTodoList.contextTypes = {
 	store: React.PropTypes.object
-};
+};*/
 
 
 let nextTodoId = 0;
@@ -275,7 +301,7 @@ const TodoApp = () => (
 	</div>
 );
 
-class Provider extends Component {
+/*class Provider extends Component {
 	getChildContext() {
 		return {
 			store: this.props.store
@@ -289,7 +315,7 @@ class Provider extends Component {
 
 Provider.childContextTypes = {
 	store: React.PropTypes.object
-};
+};*/
 
 ReactDOM.render(
 	<Provider store={ createStore(todoApp) } >
