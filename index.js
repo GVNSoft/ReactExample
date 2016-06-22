@@ -105,7 +105,31 @@ const Link = ({active, children, onClick}) => {
 	);
 };
 
-class FilterLink extends Component {
+const mapStateToLinkProps = (state, ownProps) => {
+	return {
+		active: 
+			ownProps.filter ===
+			state.visibilityFilter
+	};
+};
+
+const mapDispatchToLinkProps = (dispatch, ownProps) => {
+	return {
+		onClick: () => {
+			dispatch({
+				type: 'SET_VISIBILITY_FILTER',
+				filter : ownProps.filter
+			});
+		}
+	};
+}
+
+const FilterLink = connect(
+	mapStateToLinkProps,
+	mapDispatchToLinkProps
+)(Link);
+
+/*class FilterLink extends Component {
 	componentDidMount() {
 		const { store } = this.context;
 		this.unsubscribe = store.subscribe(() =>
@@ -139,10 +163,9 @@ class FilterLink extends Component {
 		);
 	}
 }
-
 FilterLink.contextTypes = {
 	store: React.PropTypes.object
-}
+}*/
 
 const Footer = () => (
 	<p>
